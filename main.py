@@ -24,19 +24,29 @@ print(r'''
                    | |    | |
                    |_|    |_|
 
-        1.0.0 beta            by PakecitusPaki
+        1.0.1 beta            by PakecitusPaki
 ''')
+
+janela = tk.Tk()
+janela.resizable(0,0)
+janela.geometry('800x500')
+janela.title('Pelipper -Whatsapp bulk sender-')
+
+a = tk.Frame()
+b = tk.Frame()
+bb = tk.Frame()
+c = tk.Frame()
 
 selected_data = []
 
 def opcoes():
     global selected_data
 
-    wb = load_workbook('pelipper_wb.xlxs')
+    wb = load_workbook('pelipper_db.xlsx')
     ws = wb.active
 
     janelaOpc = tk.Tk()
-    janelaOpc.title('Selecione os Dados')
+    janelaOpc.title('Contatos')
 
     frame = tk.Frame(janelaOpc)
     frame.pack(fill = tk.BOTH, expand = True)
@@ -96,23 +106,32 @@ def trabaio():
     
     global selected_data
 
-    workbook = load_workbook('cnpj.xlsx')
+    mensagemGet = msg.get('1.0', 'end')
+    print(mensagemGet)
+
+    workbook = load_workbook('pelipper_db.xlsx')
     sheet = workbook.active
-    dados = [{'empresa': row[0], 'numero': row[1], 'validade': row[2]} for row in sheet.iter_rows(min_row=2, values_only=True)]
+    dados = [{'empresa': row[0], 'numero': row[1]} for row in sheet.iter_rows(min_row=2, values_only=True)]
+
+    servico = Service(ChromeDriverManager().install())
+    navegador = webdriver.Chrome(service=servico)
+
+    navegador.get("https://web.whatsapp.com/")
+
+    #messagebox.showinfo('Confirmação', 'Faça login e depois pressione enter no console')
+
+    input('Pressione enter depois de entrar')
 
     for item in selected_data:
-        empresa, numero, validade = item
+        empresa, numero = item
 
-        servico = Service(ChromeDriverManager().install())
-        navegador = webdriver.Chrome(service=servico)
+        
 
-        navegador.get("https://web.whatsapp.com/")
 
-        input('Pressione enter depois de entrar')
 
         try:
             caixaPesquisa = WebDriverWait(navegador, 10).until(
-                EC.visibility_of_element_located((By.XPATH, '//*[@id="side"]/div[1]/div/div[2]/div[2]/div'))
+                EC.visibility_of_element_located((By.XPATH, '//*[@id="side"]/div[1]/div/div[2]/div[2]/div/div/p'))
             )
             caixaPesquisa.click()
             caixaPesquisa.send_keys(numero)
@@ -122,7 +141,7 @@ def trabaio():
                 
         try:
             contato = WebDriverWait(navegador, 10).until(
-                EC.visibility_of_element_located((By.XPATH, '//*[@id="pane-side"]/div/div/div/div[2]'))
+                EC.visibility_of_element_located((By.XPATH, '//*[@id="pane-side"]/div/div/div/div[1]/div/div/div/div[2]/div[1]'))
             )
             contato.click()
                 
@@ -131,21 +150,90 @@ def trabaio():
 
         try:
             caixaMensagem = WebDriverWait(navegador, 10).until(
-                EC.visibility_of_element_located((By.XPATH, '//*[@id="main"]/footer/div[1]/div/span[2]/div/div[2]/div[1]/div/div[1]/p'))
+                EC.visibility_of_element_located((By.XPATH, '//*[@id="main"]/footer/div[1]/div/span[2]/div/div[2]/div[1]/div/div[1]'))
             )
             caixaMensagem.click()
-            caixaMensagem.send_keys(mensagem)
+            caixaMensagem.send_keys(mensagemGet)
                 
         except Exception as e:
-            messagebox.showerror('Erro', 'A página não foi carregada corretamente, tente novamente mais tarde')
+            messagebox.showerror('Erro', f'''deu pau:
+{e}''')
 
-ababue = input('Digite 1 para ver os dados e 2 para iniciar o processo ')
+        print(f'{empresa} enviado')
 
-if ababue == '1':
-    opcoes
-elif ababue == '2':
-    trabaio
-else:
-    print('Reinicie o programa e tente novamente')
+    input('Pressione enter para finalizar o navegador')
 
-input('pressione enter para fechar')
+lblVrd = tk.Label(
+    master= a,
+    height = 30,
+    width = 35,
+    text='Pelipper v1.0.1',
+    bg='light blue')
+lblVrd.pack()
+
+lbl_coiso = tk.Label(
+    master = a,
+    width=35,
+    text='Licenciado para:',
+    bg='light blue')
+lbl_coiso.pack()
+
+lbl_coisos = tk.Label(
+    master = a,
+    width=35,
+    text='Protection Assessoria Empresarial®',
+    bg='light blue')
+lbl_coisos.pack()
+
+lblSpcs = tk.Label(
+    master = c,
+    width = 20)
+lblSpcs.pack()
+
+lblDI = tk.Label(
+    master = b,
+    text = 'Mensagem')
+lblDI.pack()
+
+lblSpcss = tk.Label(
+    master = bb,
+    width = 1)
+lblSpcss.pack()
+
+msg = tk.Text(
+    master = b,
+    height = 3,
+    width = 30)
+msg.pack()
+
+fff = tk.Label(
+    master = b,
+    height = 3)
+fff.pack()
+
+opc = tk.Button(
+    master = b,
+    width = 10,
+    text = 'Contatos',
+    command = opcoes)
+opc.pack()
+
+ddd = tk.Label(
+    master = b,
+    height = 1)
+ddd.pack()
+
+ok = tk.Button(
+    master = b,
+    height = 1,
+    text = 'Enviar',
+    command = trabaio)
+ok.pack()
+
+a.pack(side = LEFT)
+c.pack(side = LEFT)
+b.pack(side = LEFT)
+bb.pack(side = LEFT)
+
+
+janela.mainloop()
