@@ -110,7 +110,7 @@ def trabaio():
     login = enLogin.get()
     senha = enSenha.get()
 
-    assunto = assunt.get('1.0', 'end')
+    assunto = enAssunto.get()
     print(assunto)
 
     mensagem = msg.get('1.0', 'end')
@@ -133,7 +133,6 @@ def trabaio():
         xLogin.send_keys(login)
     except Exception as e:
         messagebox.showerror('Erro', 'O campo "usuário" não foi carregada corretamente, tente novamente mais tarde')
-        break
 
     try:
         xSenha = WebDriverWait(navegador, 10).until(
@@ -143,7 +142,6 @@ def trabaio():
         xSenha.send_keys(senha)
     except Exception as e:
         messagebox.showerror('Erro', 'O campo "senha" não foi carregada corretamente, tente novamente mais tarde')
-        break
 
     try:
         xEntrar = WebDriverWait(navegador, 10).until(
@@ -152,15 +150,14 @@ def trabaio():
         xEntrar.click()
     except Exception as e:
         messagebox.showerror('Erro', 'O botão "entrar" não foi carregada corretamente, tente novamente mais tarde')
-        break
 
 
     for item in selected_data:
-        email, numero = item
+        email = item
 
         try:
             xCriar = WebDriverWait(navegador, 10).until(
-                EC.visibility_of_element_located((By.XPATH, '//*[@id="rcmbtn101"]'))
+                EC.visibility_of_element_located((By.XPATH, '//*[@id="taskmenu"]/span[1]'))
             )
             xCriar.click()
         except Exception as e:
@@ -190,7 +187,7 @@ def trabaio():
 
         try:
             xMensagem = WebDriverWait(navegador, 10).until(
-                EC.visibility_of_element_located((By.XPATH, '//*[@id="composebodycontainer"]/div[1]/div[1]/div[2]'))
+                EC.visibility_of_element_located((By.XPATH, '//*[@id="composebody_ifr"]'))
             )
             xMensagem.click()
             xMensagem.send_keys(mensagem)
@@ -207,7 +204,7 @@ def trabaio():
             messagebox.showerror('Erro', 'O campo "mensagem" não foi carregada corretamente, tente novamente mais tarde')
             break
 
-        print(f'{empresa} enviado')
+        print(f'{email} enviado')
 
 lblVrd = tk.Label(
     master= a,
@@ -236,12 +233,50 @@ lblSpcs = tk.Label(
     width = 20)
 lblSpcs.pack()
 
-###
-#adicionar entrys
-#login email
-#senha email
-#assunto
-###
+lblDIsss = tk.Label(
+    master = b,
+    text = 'Login')
+lblDIsss.pack()
+
+abablue = tk.Label(
+    master = b,
+    width = 1)
+abablue.pack()
+
+enLogin = tk.Entry(
+    master = b,
+    width = 30)
+enLogin.pack()
+
+lblDIsss = tk.Label(
+    master = b,
+    text = 'Senha')
+lblDIsss.pack()
+
+lblSpcsssss = tk.Label(
+    master = b,
+    width = 1)
+lblSpcsssss.pack()
+
+enSenha = tk.Entry(
+    master = b,
+    width = 30)
+enSenha.pack()
+
+lblDIss = tk.Label(
+    master = b,
+    text = 'Assunto')
+lblDIss.pack()
+
+lblSpcsss = tk.Label(
+    master = b,
+    width = 1)
+lblSpcsss.pack()
+
+enAssunto = tk.Entry(
+    master = b,
+    width = 30)
+enAssunto.pack()
 
 lblDI = tk.Label(
     master = b,
